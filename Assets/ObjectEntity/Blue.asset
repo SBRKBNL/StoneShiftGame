@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300a4c413cdffd64aa0b940050a06f78, type: 3}
+  m_Name: Blue
+  m_EditorClassIdentifier: 
+  objectSprite: {fileID: -2615874204119335, guid: 57e29868e44b85d4f8f2e0d42774aac2, type: 3}
+  objectName: BlueBlock
+  objectType: 0
+  interactType: 1
+  isActive: 0
