@@ -434,6 +434,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &919473400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 919473402}
+  - component: {fileID: 919473403}
+  m_Layer: 0
+  m_Name: StoneController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &919473402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919473400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.86893, y: 0.18627, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &919473403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919473400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6f1d09589f547842b8857bb7f1aafd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectCreator: {fileID: 1425230784}
 --- !u!1001 &1305578513
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -573,10 +618,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ccf82a4d8a4fc04e8961fee15180a3e, type: 2}
   - {fileID: 11400000, guid: 007d9e9e3265374478e724d180af49e6, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
-  objectType:
-  - {fileID: 11400000, guid: 53b8a078f738ec843bfe955d3a221a1b, type: 2}
   ObjectPrefab: {fileID: 1454439143}
-  dummyNumber: 0
 --- !u!4 &1425230785
 Transform:
   m_ObjectHideFlags: 0
@@ -651,3 +693,4 @@ SceneRoots:
   - {fileID: 1425230785}
   - {fileID: 132334357}
   - {fileID: 1903070022}
+  - {fileID: 919473402}
