@@ -1,8 +1,68 @@
 using System.Net.Http;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WhichIsWhich
+{
+    MapKeeper mK = new MapKeeper(); //Creats map keeper referance.
+    PosKeeper pK = new PosKeeper();
+    int anaTasCounter = 0;
+    int engelTasCounter = 0;
+    int jokerTasCounter = 0;
+    public int wIWF(int incX, int incY)
+    {
+
+        char rastgeleDeneme = mK.lvl1[incX, incY][0];
+        
+
+        int retVal = mK.lvl1[incX, incY][1] - '0';
+
+
+        switch (rastgeleDeneme)
+        {
+            case '0':
+                //Debug.Log("Ana Tas");
+                anaTasCounter++;
+
+                //Debug.Log("donen" + retVal);
+
+                return retVal;
+            case '1':
+                //Debug.Log("Engel Tas");
+                engelTasCounter++;
+                //Debug.Log("donen" + retVal);
+
+                return retVal + 4;
+            case '2':
+                Debug.Log("Joker Tas");
+                jokerTasCounter++;
+                //Debug.Log("donen" + retVal);
+
+                return retVal + 10;
+            default:
+                Debug.Log("İkisi de gerceklesmedi");
+                break;
+        }
+
+        return -1;
+    }
+
+    //Burada bir sorun var counter *3 olarak gidiyor 1 artması gereken yerde 3 artıyor
+    public void PrintCounterValues()
+    {
+
+        Debug.Log("Anatas Counter Values = " + anaTasCounter);
+        Debug.Log("Engel Counter Values = " + engelTasCounter);
+        Debug.Log("Joker Counter Values = " + jokerTasCounter);
+
+    }
+}
+
+
+
+
+/*public class WhichIsWhich
 {
     MapKeeper mK = new MapKeeper(); //Creats map keeper referance.
     
@@ -50,4 +110,4 @@ public class WhichIsWhich
         }
         return -1;
     }
-}
+}*/

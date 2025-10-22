@@ -9,7 +9,7 @@ public class ObjectScript : MonoBehaviour
     private bool isDragging = false;
     private int activeFingerId = -1;
     //public List<ObjectEntity> objectList;
-    public int objectType; 
+    public int objectType;
     public int interactType;
     private ExpController expController = new ExpController(); //Patlama olacak mı kontrol edecek bir sınıf bu sınıftaki fonksiyon bool bir değer dönecek.
 

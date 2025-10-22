@@ -14,8 +14,9 @@ public class ObjectCreator : MonoBehaviour
     //public int dummyNumber = 0; // Dummy number for testing purposes
     public MapKeeper mapKeeper = new MapKeeper();
     public WhichIsWhich whichIsWhich = new WhichIsWhich();
+    public int wIWS; //WhichIsWhichStorage
 
-    
+
 
 
     void Start()
@@ -29,92 +30,45 @@ public class ObjectCreator : MonoBehaviour
 
 
 
-    public void CreateObjFunc(int verticalHMT, int horizontalHMT)
+    public void CreateObjFunc(int verticalHMT, int horizontalHMT, float horizontStart, float verticalStart)
     {
-        //Debug.Log("verticalHMT" + verticalHMT);
-        //Debug.Log("horizontalHMT" + horizontalHMT);
-        float useVerticalHMT = verticalHMT / 2;
-        //Debug.Log("userVerticalHMT" + useVerticalHMT);
-        float useHorizontalHMT = horizontalHMT / 2;
-        //Debug.Log("useHorizontalHMT" + useHorizontalHMT);
-        float useVerticalHMTS;
-        float useHorizontalHMTS;
-        //Debug.Log(mapKeeper.lvl1[0, 1]);
-        //Debug.Log(mapKeeper.lvl1.GetLength(0)); // 1. map için 8 döndü
-        //Debug.Log(mapKeeper.lvl1.GetLength(1)); //1. map için 9 döndü
-        
 
-        //Burayı bir fonksiyona çevir
-        if (verticalHMT % 2 == 1)
+
+        for (int i = 0; i < verticalHMT; i++)
         {
 
-            useVerticalHMTS = useVerticalHMT + 1;
-        }
-        else
-        {
-            useVerticalHMTS = useVerticalHMT;
-
-        }
-
-        if (horizontalHMT % 2 == 1)
-        {
-
-            useHorizontalHMTS = useHorizontalHMT + 1;
-        }
-        else
-        {
-            useHorizontalHMTS = useHorizontalHMT;
-
-        }
-
-        
-
-        for (float i = -1 * useVerticalHMT; i < useVerticalHMTS; i++)
-        {
-
-            /*GameObject obj = Instantiate(ObjectPrefab);
-            obj.AddComponent<SpriteRenderer>().sprite = objectList[0].objectSprite;
-            obj.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
-            obj.transform.position = new Vector3(5, 0, 0);*/
-            for (float j = -1 * useHorizontalHMT; j < useHorizontalHMTS; j++)
+            for (int j = 0; j < horizontalHMT; j++)
             {
-                //Debug.Log("Creating object at position: " + i +" "+j);
-                RNG rng = new RNG();
-                int randomIndex = rng.RandomNumberGenerator(3);
+                /*RNG rng = new RNG();
+                int randomIndex = rng.RandomNumberGenerator(3);*/
                 GameObject obj = Instantiate(ObjectPrefab);
                 obj.SetActive(true);
                 obj.name = "Object_" + i + "_" + j;
-
+                wIWS = whichIsWhich.wIWF(i, j);
                 // Objeye bağlı script'e eriş
                 ObjectScript behaviour = obj.GetComponent<ObjectScript>();
-                behaviour.objectType = objectList[whichIsWhich.wIWF(horizontalHMT, verticalHMT)].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
-                //Debug.Log("whichiswhichdonen" + whichIsWhich.wIWF(horizontalHMT, verticalHMT));
-                behaviour.interactType = objectList[whichIsWhich.wIWF(horizontalHMT, verticalHMT)].interactType;
-                //int deneme = obj.GameObject.objectName;
+                //3 kere çağırılmasına sebep olan yer
+                behaviour.objectType = objectList[wIWS].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
+                behaviour.interactType = objectList[wIWS].interactType;
+                obj.GetComponent<SpriteRenderer>().sprite = objectList[wIWS].objectSprite;
 
-                //obj.tag = "Object";
+
 
                 //obj.AddComponent<SpriteRenderer>().sprite = objectList[randomIndex].objectSprite;
                 //obj.GetComponent<SpriteRenderer>.sprite = objectList[0].objectSprite;
-                obj.GetComponent<SpriteRenderer>().sprite = objectList[whichIsWhich.wIWF(horizontalHMT, verticalHMT)].objectSprite;
                 //obj.objectType = objectList[randomIndex].objectType;
                 //obj.GetComponent<ObjectData>().objectType = objectList[randomIndex].objectType;
-
-
-
 
 
                 //obj.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
                 float ix = i * 0.5f;
                 float jy = j * 0.5f;
-                obj.transform.position = new Vector3(ix, jy, 0);
+                obj.transform.position = new Vector3(jy, ix, 0);
 
             }
 
         }
-
-        // This function is intended to create an instance of ObjectEntity
-
+        whichIsWhich.PrintCounterValues();
 
     }
 }

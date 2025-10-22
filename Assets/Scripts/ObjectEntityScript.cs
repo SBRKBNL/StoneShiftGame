@@ -16,28 +16,28 @@ public class ObjectEntity : ScriptableObject
                              //2 -> Green
                              //3 -> Yellow
 
-                             /*Object Type 1
-                             InteractionType 0 -> Grass
-                             1 -> Grass x2
-                             2 -> Dolap(?)
-                             3 -> Door
-                             4 -> Box
-                             5 -> Tabak        
-                             */ 
+    /*Object Type 1
+    InteractionType 0 -> Grass
+    1 -> Grass x2
+    2 -> Dolap(?)
+    3 -> Door
+    4 -> Box
+    5 -> Tabak        
+    */
 
-                            /*Object Type 2
-                             InteractionType 0 -> Fırfır
-                             1 -> Renkli Patlangaç
-                             2 -> Fırlama Yatay
-                             3 -> Fırlama Dikey
-                             4 -> Tnt
-                             */ 
+    /*Object Type 2
+     InteractionType 0 -> Fırfır
+     1 -> Renkli Patlangaç
+     2 -> Fırlama Yatay
+     3 -> Fırlama Dikey
+     4 -> Tnt
+     */
 
 
 
 
 
     public bool isActive;
-    
+
 
 }

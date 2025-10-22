@@ -29,7 +29,7 @@ public class TouchedObject : MonoBehaviour
                 moveObject.MoveObjectFunc(touchedObject);
             }
         }*/
-        
+
     }
     public bool TouchObjectFunc(Vector2 initPosition)
     {
@@ -38,7 +38,7 @@ public class TouchedObject : MonoBehaviour
         Debug.Log("initposx" + initPosition.x + "\ninitposy" + initPosition.y);
         RaycastHit2D hit = Physics2D.Raycast(initPosition, Vector2.zero);
         //RaycastHit2D hitInformation = Physics2D.Raycast(initPosition, Camera.main.transform.forward);
-       
+
 
         if (hit.collider != null)
         {
@@ -51,11 +51,11 @@ public class TouchedObject : MonoBehaviour
         else
         {
             Debug.Log("ObjectNUll");
-            
+
         }
 
 
-            return retValue;
+        return retValue;
     }
-    
+
 }

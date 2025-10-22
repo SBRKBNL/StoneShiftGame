@@ -17,8 +17,8 @@ public class MoveObject : MonoBehaviour
 
     public bool MoveObjectFunc(GameObject incObj)
     {
-        incObj.transform.position = new Vector3( 2,  1, 0); ;
-        Debug.Log("Object Possesion x:" + incObj.transform.position.x +"\n" +"Object Possesion y:" + incObj.transform.position.y);
+        incObj.transform.position = new Vector3(2, 1, 0); ;
+        Debug.Log("Object Possesion x:" + incObj.transform.position.x + "\n" + "Object Possesion y:" + incObj.transform.position.y);
 
         //obj.transform.position = new Vector3( i,  j, 0);
 
