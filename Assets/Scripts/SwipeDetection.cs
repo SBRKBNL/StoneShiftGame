@@ -1,82 +1,163 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+//using UnityEngine.InputSystem; // bu bulunduğu zaman eski tarzı kullanınca patlıyor.
+
 
 
 public class SwipeDetection : MonoBehaviour
 {
-	public static SwipeDetection instance;
-	public delegate void Swipe(Vector2 direction);
-	public event Swipe swipePerformed;
-	public TouchedObject touchedObject;
-	
 
-	
-	[SerializeField] private InputAction position, press;
+    private Vector3 startPos;
+    private Vector3 touchStartPos;
+    private bool isDragging = false;
+    private int activeFingerId = -1;
+    Transform objectTransform;
+    Collider2D hit;
+    //public List<ObjectEntity> objectList;
+    
 
-	[SerializeField] private float swipeResistance = 100;
-	private Vector2 initialPos;
-	private Vector2 currentPos => position.ReadValue<Vector2>();
-	private void Awake()
-	{
-		position.Enable();
-		press.Enable();
-		press.performed += _ => { initialPos = currentPos; };
-		press.canceled += _ => DetectSwipe();
-		instance = this;
-	}
+    private ExpController expController = new ExpController(); //Patlama olacak mı kontrol edecek bir sınıf bu sınıftaki fonksiyon bool bir değer dönecek.
 
-	private void DetectSwipe()
-	{
-		
-		Vector2 delta = currentPos - initialPos;
-		Vector2 direction = Vector2.zero;
-		//touchedObject.TouchObjectFunc(initialPos);
-		
+    //[Header("Ayarlar")]
+    
+    public float dragThreshold = 0.4f;  // Sürükleme yönü algılama eşiği
+    public float rayDistance = 1f;      // Komşu arama mesafesi
+    public float returnSpeed = 10f;     // Geri dönme hızı
 
-		DetectDirection(delta.x, delta.y);
-		
+    private void Update()
+    {
+        // Eğer hiç dokunma yoksa çık
+        if (Input.touchCount == 0) return;
 
-		if (Mathf.Abs(delta.x) > swipeResistance)
-		{
-			direction.x = Mathf.Clamp(delta.x, -1, 1);
-		}
-		if (Mathf.Abs(delta.y) > swipeResistance)
-		{
-			direction.y = Mathf.Clamp(delta.y, -1, 1);
-		}
-		if (direction != Vector2.zero & swipePerformed != null)
-			swipePerformed(direction);
+        foreach (Touch touch in Input.touches)
+        {
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(touch.position);
+            worldPos.z = 0;
 
-	}
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    // Dokunma başladığında collider'a temas ediliyor mu kontrol et
+                    hit = Physics2D.OverlapPoint(worldPos);
+                    //Debug.Log("hit pos: " + hit.transform == transform);
+                    
+                    if (hit != null)
+                    {
+                        objectTransform = hit.transform;
+                        GameObject gO1 = hit.gameObject;
+                        
+                        //Debug.Log("Hit transform pos x" + gO1.transform.position.x);
+                        //Gonderme islemini burada yapacaz.
+                        
+                        isDragging = true;
+                        activeFingerId = touch.fingerId;
+                        startPos = objectTransform.position;
+                        touchStartPos = worldPos;
+                    }
+                    break;
 
-	private void DetectDirection(float x, float y)
-	{
+                case TouchPhase.Moved:
+                    if (isDragging && touch.fingerId == activeFingerId)
+                    {
+                        // Objeyi dokunma hareketiyle sürükle
+                        Vector3 offset = worldPos - touchStartPos;
+                        objectTransform.position = startPos + offset;
+                        
+                    }
+                    break;
 
-		if (x < 90 && x > -90)
-		{
-			if (y > 0)
-				Debug.Log("Up Swipe");
-				
-			else
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    if (isDragging && touch.fingerId == activeFingerId)
+                    {
+                        isDragging = false;
+                        activeFingerId = -1;
+                        
+                        HandleRelease(worldPos);
+                    }
+                    break;
+            }
+        }
+    }
 
-			{
-				Debug.Log("Down Swipe");
+    private void HandleRelease(Vector3 touchEndPos)
+    {
+        Vector3 dragVector = touchEndPos - touchStartPos;
+        bool swapped = false;
 
-				Debug.Log("y value: " + y + "\nx value: " + x);
-			}
-		}
-		else
-		{
-			if (x > 0)
-				Debug.Log("Right Swipe");
-			else
-				Debug.Log("Left Swipe");
-		}
+        // Sürükleme yönünü belirle (x veya y ekseninde baskın olan)
+        if (Mathf.Abs(dragVector.x) > Mathf.Abs(dragVector.y))
+        {
+            if (dragVector.x > dragThreshold)
+                swapped = TrySwapWithNeighbor(Vector2.right);
+            else if (dragVector.x < -dragThreshold)
+                swapped = TrySwapWithNeighbor(Vector2.left);
+        }
+        else
+        {
+            if (dragVector.y > dragThreshold)
+                swapped = TrySwapWithNeighbor(Vector2.up);
+            else if (dragVector.y < -dragThreshold)
+                swapped = TrySwapWithNeighbor(Vector2.down);
+        }
 
+        if (!swapped)
+            StartCoroutine(SmoothReturn());
+    }
 
+    private IEnumerator SmoothReturn()
+    {
+        while (Vector3.Distance(objectTransform.position, startPos) > 0.01f)
+        {
+            objectTransform.position = Vector3.Lerp(objectTransform.position, startPos, Time.deltaTime * returnSpeed);
+            yield return null;
+        }
+        objectTransform.position = startPos;
+    }
 
+    private bool TrySwapWithNeighbor(Vector2 direction)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(startPos, direction, rayDistance);
+        if (hit.collider != null && hit.collider.gameObject != gameObject)
+        {
+            string dummyNameKeeper = objectTransform.name;
+            //Dummyname keeperda ilk tıklanan obje var
+            Debug.Log("dummyNameKeeper: " + objectTransform.name);
 
-	}
+            Transform other = hit.collider.transform;
+            //other positionda 2. obje var
+            Vector3 otherPos = other.position;
+            //hit.transform.name = "deneme123";
+            objectTransform.name = other.name;
+            
+            Debug.Log("other name: " + other.name);
+            other.transform.name = dummyNameKeeper;
+            StartCoroutine(SwapSmooth(other, startPos, otherPos));
+            
+            return true;
+        }
+        return false;
+    }
+
+    private IEnumerator SwapSmooth(Transform other, Vector3 myStart, Vector3 otherStart)
+    {
+        float t = 0f;
+        float duration = 0.2f;
+        Vector3 myTarget = otherStart;
+        Vector3 otherTarget = myStart;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            objectTransform.position = Vector3.Lerp(myStart, myTarget, t);
+            other.position = Vector3.Lerp(otherStart, otherTarget, t);
+            yield return null;
+        }
+
+        objectTransform.position = myTarget;
+        other.position = otherTarget;
+        Debug.Log(expController.isBoomAble(objectTransform.gameObject, other.gameObject));
+    }
+
 }

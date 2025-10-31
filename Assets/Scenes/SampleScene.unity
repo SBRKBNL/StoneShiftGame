@@ -314,42 +314,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203757dfb386b0e44ae452088e1a3f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchedObject: {fileID: 132334356}
-  position:
-    m_Name: Position
-    m_Type: 0
-    m_ExpectedControlType: Vector2
-    m_Id: 1a47ea6b-7b31-4c4a-b7d3-1bbd0ded4569
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: af97ac19-8b31-4263-8aec-a91822906670
-      m_Path: <Touchscreen>/position
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Position
-      m_Flags: 0
-    m_Flags: 0
-  press:
-    m_Name: Press
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: 45c35a3a-8809-4be6-81dd-a09000805e0d
-    m_Processors: 
-    m_Interactions: Press
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 182e2f73-fe75-4153-b5bd-783d8ad4f7f6
-      m_Path: <Touchscreen>/Press
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Press
-      m_Flags: 0
-    m_Flags: 0
-  swipeResistance: 100
+  dragThreshold: 0.4
+  rayDistance: 1
+  returnSpeed: 10
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +589,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
-  - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
+  - {fileID: 11400000, guid: 147e252a897d1604a99af713696ad8d9, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}

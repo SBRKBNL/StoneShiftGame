@@ -12,9 +12,9 @@ public class ObjectCreator : MonoBehaviour
     //private int verticalHMT; // Vertical index for objectData
     //private int horizontalHMT; // Horizontal index for objectData
     //public int dummyNumber = 0; // Dummy number for testing purposes
-    public MapKeeper mapKeeper = new MapKeeper();
+    //public MapKeeper mapKeeper = new MapKeeper();
     public WhichIsWhich whichIsWhich = new WhichIsWhich();
-    public int wIWS; //WhichIsWhichStorage
+    public (int, float, float) wIWS; //WhichIsWhichStorage
 
 
 
@@ -48,9 +48,9 @@ public class ObjectCreator : MonoBehaviour
                 // Objeye bağlı script'e eriş
                 ObjectScript behaviour = obj.GetComponent<ObjectScript>();
                 //3 kere çağırılmasına sebep olan yer
-                behaviour.objectType = objectList[wIWS].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
-                behaviour.interactType = objectList[wIWS].interactType;
-                obj.GetComponent<SpriteRenderer>().sprite = objectList[wIWS].objectSprite;
+                behaviour.objectType = objectList[wIWS.Item1].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
+                behaviour.interactType = objectList[wIWS.Item1].interactType;
+                obj.GetComponent<SpriteRenderer>().sprite = objectList[wIWS.Item1].objectSprite;
 
 
 
@@ -61,9 +61,7 @@ public class ObjectCreator : MonoBehaviour
 
 
                 //obj.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
-                float ix = i * 0.5f;
-                float jy = j * 0.5f;
-                obj.transform.position = new Vector3(jy, ix, 0);
+                obj.transform.position = new Vector3(wIWS.Item2, wIWS.Item3, 0);
 
             }
 

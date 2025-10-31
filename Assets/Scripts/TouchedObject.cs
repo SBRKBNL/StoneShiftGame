@@ -35,7 +35,7 @@ public class TouchedObject : MonoBehaviour
     {
 
         //Vector2 touchPosWorld2D = new Vector2(touchPosWorld.x, touchPosWorld.y);
-        Debug.Log("initposx" + initPosition.x + "\ninitposy" + initPosition.y);
+        //Debug.Log("initposx" + initPosition.x + "\ninitposy" + initPosition.y);
         RaycastHit2D hit = Physics2D.Raycast(initPosition, Vector2.zero);
         //RaycastHit2D hitInformation = Physics2D.Raycast(initPosition, Camera.main.transform.forward);
 
@@ -45,12 +45,12 @@ public class TouchedObject : MonoBehaviour
             //We should have hit something with a 2D Physics collider!
             GameObject touchedObject = hit.transform.gameObject;
             //touchedObject should be the object someone touched.
-            Debug.Log("Touched " + touchedObject.transform.name);
+            //Debug.Log("Touched " + touchedObject.transform.name);
             moveObject.MoveObjectFunc(touchedObject);
         }
         else
         {
-            Debug.Log("ObjectNUll");
+            //Debug.Log("ObjectNUll");
 
         }
 

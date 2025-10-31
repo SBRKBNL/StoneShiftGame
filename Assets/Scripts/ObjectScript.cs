@@ -4,16 +4,20 @@ using System.Collections.Generic;
 
 public class ObjectScript : MonoBehaviour
 {
-    private Vector3 startPos;
+    public int objectType;
+    public int interactType;
+    
+    /*private Vector3 startPos;
     private Vector3 touchStartPos;
     private bool isDragging = false;
     private int activeFingerId = -1;
     //public List<ObjectEntity> objectList;
-    public int objectType;
-    public int interactType;
+    
+
     private ExpController expController = new ExpController(); //Patlama olacak mı kontrol edecek bir sınıf bu sınıftaki fonksiyon bool bir değer dönecek.
 
     //[Header("Ayarlar")]
+    
     public float dragThreshold = 0.4f;  // Sürükleme yönü algılama eşiği
     public float rayDistance = 1f;      // Komşu arama mesafesi
     public float returnSpeed = 10f;     // Geri dönme hızı
@@ -131,5 +135,5 @@ public class ObjectScript : MonoBehaviour
 
         transform.position = myTarget;
         other.position = otherTarget;
-    }
+    }*/
 }
