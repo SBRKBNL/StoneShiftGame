@@ -10,6 +10,7 @@ public class StoneControllerScript : MonoBehaviour
     public ObjectCreator objectCreator;
     public PosArrange posArrange = new PosArrange();
     public (float, float) gelenDeger;
+    DictCreator dC; 
     void Start()
     {
 
@@ -19,6 +20,9 @@ public class StoneControllerScript : MonoBehaviour
         //Debug.Log("verticalHMT= " + verticalHMT);
         gelenDeger = posArrange.DecideLine(horizontalHMT, verticalHMT);
         //Debug.Log("Gelen Deger Item1= " + gelenDeger.Item1 + "Gelen Deger Item2 = " + gelenDeger.Item2);
+        dC = FindObjectOfType<DictCreator>();
+
+        dC.createDictionaryFunc(horizontalHMT, verticalHMT);
         
         objectCreator.CreateObjFunc(horizontalHMT, verticalHMT, gelenDeger.Item1, gelenDeger.Item2); // horizontal hmt yatay sıraları tutarken vertical dikey sıraları tuutyor.
                                                                  //Burada ilk aşamada y değerini veriyoruz daha sonra x değerini gönderiyoruz

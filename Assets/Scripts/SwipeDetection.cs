@@ -13,6 +13,7 @@ public class SwipeDetection : MonoBehaviour
     private bool isDragging = false;
     private int activeFingerId = -1;
     Transform objectTransform;
+    public int whichWayDidISwipe;
     Collider2D hit;
     //public List<ObjectEntity> objectList;
     
@@ -22,7 +23,7 @@ public class SwipeDetection : MonoBehaviour
     //[Header("Ayarlar")]
     
     public float dragThreshold = 0.4f;  // Sürükleme yönü algılama eşiği
-    public float rayDistance = 1f;      // Komşu arama mesafesi
+    public float rayDistance = 1f;      // Komşu arama mesafesi 0.5olarak değiştirilmeli mi?
     public float returnSpeed = 10f;     // Geri dönme hızı
 
     private void Update()
@@ -90,16 +91,30 @@ public class SwipeDetection : MonoBehaviour
         if (Mathf.Abs(dragVector.x) > Mathf.Abs(dragVector.y))
         {
             if (dragVector.x > dragThreshold)
+            {
+                whichWayDidISwipe = 1;
                 swapped = TrySwapWithNeighbor(Vector2.right);
+            }
             else if (dragVector.x < -dragThreshold)
+            {
+                whichWayDidISwipe = 2;
                 swapped = TrySwapWithNeighbor(Vector2.left);
+            }
         }
         else
         {
-            if (dragVector.y > dragThreshold)
+            if (dragVector.y > dragThreshold){
+
+                whichWayDidISwipe = 3;
                 swapped = TrySwapWithNeighbor(Vector2.up);
-            else if (dragVector.y < -dragThreshold)
+            
+            }
+                
+            else if (dragVector.y < -dragThreshold){
+                whichWayDidISwipe = 4;
                 swapped = TrySwapWithNeighbor(Vector2.down);
+            }
+                
         }
 
         if (!swapped)
@@ -129,11 +144,13 @@ public class SwipeDetection : MonoBehaviour
             //other positionda 2. obje var
             Vector3 otherPos = other.position;
             //hit.transform.name = "deneme123";
-            objectTransform.name = other.name;
-            
-            Debug.Log("other name: " + other.name);
-            other.transform.name = dummyNameKeeper;
+
             StartCoroutine(SwapSmooth(other, startPos, otherPos));
+            
+            objectTransform.name = other.name;
+
+            Debug.Log("other name: " + other.name);
+            other.name = dummyNameKeeper; 
             
             return true;
         }
@@ -157,7 +174,7 @@ public class SwipeDetection : MonoBehaviour
 
         objectTransform.position = myTarget;
         other.position = otherTarget;
-        Debug.Log(expController.isBoomAble(objectTransform.gameObject, other.gameObject));
+        Debug.Log(expController.isBoomAble(objectTransform.gameObject, other.gameObject, whichWayDidISwipe)); 
     }
 
 }

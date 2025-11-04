@@ -25,6 +25,7 @@ public class ObjectCreator : MonoBehaviour
         //verticalHMT = mapKeeper.lvl1.GetLength(1);
         //CreateObjFunc(verticalHMT, horizontalHMT);
         //Debug.Log("ObjectCreator started and CreateObjFunc called.");
+        
     }
 
 
@@ -41,6 +42,8 @@ public class ObjectCreator : MonoBehaviour
             {
                 /*RNG rng = new RNG();
                 int randomIndex = rng.RandomNumberGenerator(3);*/
+                
+
                 GameObject obj = Instantiate(ObjectPrefab);
                 obj.SetActive(true);
                 obj.name = "Object_" + i + "_" + j;

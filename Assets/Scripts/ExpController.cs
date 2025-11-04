@@ -5,7 +5,8 @@ public class ExpController
 {
     public SurrController surrController = new SurrController();
 
-    public bool isBoomAble(GameObject clickedObject, GameObject otherObject)
+    [System.Obsolete]
+    public bool isBoomAble(GameObject clickedObject, GameObject otherObject, int whichWayDidISwipe)
     {
         /*Kendime Düşünceler*/
         /* Bu class swipeDetection içerisinde çağırılıyor.eğer bir obje hareket ettirilirse çağırılıyor.
@@ -15,8 +16,10 @@ public class ExpController
         - Sorgulama sonucu da uygunsa obje patlatılır
         - Eğer uygun değilse swipe gerçekleşmez*/
         ObjectScript behaviourClicked = clickedObject.GetComponent<ObjectScript>();
+        ObjectScript behaviourOther = otherObject.GetComponent<ObjectScript>();
         int localObjectType = behaviourClicked.objectType;
         int localInteractTypeClicked = behaviourClicked.interactType;
+        int localInteractTypeOther = behaviourOther.interactType;
 
         ObjectScript behaviourLetted = otherObject.GetComponent<ObjectScript>();
         int localObjectTypeLetted = behaviourLetted.interactType;
@@ -25,9 +28,13 @@ public class ExpController
         //ilk once uzerine tıklanan gameObject bir ana oyun elemanı mı onu kontrol etmeliyiz, daha sonra patlama olacak mı olmayacak mı on bakacağız.
         if (localObjectType == 0 || localObjectType == 1)
         {
-            float xPosKeep = clickedObject.transform.position.x;
-            float yPosKeep = clickedObject.transform.position.y;
-            surrController.isSurExp(localInteractTypeClicked, xPosKeep, yPosKeep);
+            Vector2 posKeepClicked, posKeepSwifted;
+            posKeepClicked.x = clickedObject.transform.position.x;
+            posKeepClicked.y = clickedObject.transform.position.y;
+            posKeepSwifted.x = otherObject.transform.position.x;
+            posKeepSwifted.y = otherObject.transform.position.y;
+            
+            surrController.isSurExp(localInteractTypeClicked, localInteractTypeOther, posKeepClicked, posKeepSwifted);
 
 
             return true;

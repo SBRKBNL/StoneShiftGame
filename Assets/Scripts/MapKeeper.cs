@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using UnityEngine;
 
 public class MapKeeper
@@ -11,6 +13,10 @@ public class MapKeeper
                             {"14", "14", "14", "14", "14", "14", "14", "14", "14"},
                             {"14", "14", "14", "14", "14", "14", "14", "14", "14"},
                             {"14", "14", "14", "14", "14", "14", "14", "14", "14"} };
+    
+    
+                                            
+                                            
 
     //9' a 8 lik bir array
     //Kod tarafında uzunluğunu -> whichIsWhich.wIWF(mapKeeper.lvl1.GetLength(0),mapKeeper.lvl1.GetLength(1)); şeklinde buluyoruz.
