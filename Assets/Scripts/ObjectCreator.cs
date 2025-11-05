@@ -6,7 +6,7 @@ using Unity.Collections;
 
 public class ObjectCreator : MonoBehaviour
 {
-
+    
     public List<ObjectEntity> objectList;
     public GameObject ObjectPrefab; // Prefab for the object to be created
     //private int verticalHMT; // Vertical index for objectData
@@ -15,20 +15,7 @@ public class ObjectCreator : MonoBehaviour
     //public MapKeeper mapKeeper = new MapKeeper();
     public WhichIsWhich whichIsWhich = new WhichIsWhich();
     public (int, float, float) wIWS; //WhichIsWhichStorage
-
-
-
-
-    void Start()
-    {
-        //horizontalHMT = mapKeeper.lvl1.GetLength(0);
-        //verticalHMT = mapKeeper.lvl1.GetLength(1);
-        //CreateObjFunc(verticalHMT, horizontalHMT);
-        //Debug.Log("ObjectCreator started and CreateObjFunc called.");
-        
-    }
-
-
+    RNG rng = new RNG();
 
 
     public void CreateObjFunc(int verticalHMT, int horizontalHMT, float horizontStart, float verticalStart)
@@ -42,7 +29,7 @@ public class ObjectCreator : MonoBehaviour
             {
                 /*RNG rng = new RNG();
                 int randomIndex = rng.RandomNumberGenerator(3);*/
-                
+
 
                 GameObject obj = Instantiate(ObjectPrefab);
                 obj.SetActive(true);
@@ -71,5 +58,21 @@ public class ObjectCreator : MonoBehaviour
         }
         whichIsWhich.PrintCounterValues();
 
+    }
+    
+    public void continueGame(Vector2 incCreatePos, string obectName)//inc create pos olarak en üstü verip oradan düşürebilirim
+    {
+        int randomIndex = rng.RandomNumberGenerator(3);
+        GameObject obj = Instantiate(ObjectPrefab);
+        obj.SetActive(true);
+        obj.name = obectName;//direk yerine geleceği objenin adı gelir ve eşlenir
+        
+        // Objeye bağlı script'e eriş
+        ObjectScript behaviour = obj.GetComponent<ObjectScript>();
+        //3 kere çağırılmasına sebep olan yer
+        behaviour.objectType = objectList[randomIndex].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
+        behaviour.interactType = objectList[randomIndex].interactType;
+        obj.GetComponent<SpriteRenderer>().sprite = objectList[randomIndex].objectSprite;
+        obj.transform.position = new Vector3(incCreatePos.x, incCreatePos.y, 0);
     }
 }

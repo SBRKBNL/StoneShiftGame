@@ -12,13 +12,18 @@ public class SurrController : MonoBehaviour
     public MapKeeper mk = new MapKeeper();
     public string[,] mKC;
     //Collider2D[] hit0 = new Collider2D[10];
-    private string[] _incInterractType = new string[18];
+    public string[] _incInterractType = new string[18];
     public string createdName;
     public bool localSwipedOrHadTo;
     public Vector2[] dummyPos = new Vector2[5];
+
+    public ObjectCreator objectCreator;
     
     private DictCreator dictCreator;
     public Collider2D[] hit0 = new Collider2D[5];
+
+    public ShiftController shiftController = new ShiftController();
+
     
     //Dictionary<float, string> sub = new Dictionary<float, string>();
 
@@ -59,177 +64,62 @@ public class SurrController : MonoBehaviour
         Debug.Log("VAlue : " + _incInterractType[1]);
         
 
-
-
-        //dK.lvl10.Keys.ElementAt(worldPos);
-
-
-        /*hit0[0] = Physics2D.OverlapPoint(worldPos);//Cliked object itself
-        hit0[1] = Physics2D.OverlapPoint(dummyPos);
-        dummyPos.x = dummyPos.x - 0.5f;
-        hit0[1] = Physics2D.OverlapPoint(dummyPos);
-        ObjectScript behaviour = hit0[1].GetComponent<ObjectScript>();*/
-
-
-        //Collider2D hitO0 = Physics2D.OverlapPoint(worldPos);
-        //Collider2D hitO1 = Physics2D.OverlapPoint(dummyPos);        
-        //Debug.Log(behaviour.interactType);
-        //Debug.Log(incInteractType);
-        //Debug.Log(behaviour.name);
-
-
-        
-        
-        //ObjectScript behaviour2 = hit0[2].GetComponent<ObjectScript>();
-        //dummyPos.x = dummyPos.x + 1.5f;
-        
-        
-        
-        
-        
-
-
-        //assignObjectBehaviours();//Tüm bu üstteki atamaları bu fonksiyonun içine taşıyarak tekte yapalım
-
-
         if (_incInterractType[1] == _incInterractType[0])
         {
 
 
             if (_incInterractType[2] == _incInterractType[0])
             {
-                hit0[0] = Physics2D.OverlapPoint(worldPosClicked);//Cliked object itself
-                hit0[1] = Physics2D.OverlapPoint(dummyPos[0]);
+                if (Physics2D.OverlapPoint(worldPosClicked) != null && Physics2D.OverlapPoint(dummyPos[0]) != null && Physics2D.OverlapPoint(dummyPos[1]) != null)
+                {
+                    hit0[0] = Physics2D.OverlapPoint(worldPosClicked);//Cliked object itself
+                    Debug.Log(worldPosClicked);
+                    hit0[1] = Physics2D.OverlapPoint(dummyPos[0]);
+                    Debug.Log(dummyPos[0]);
+                    hit0[2] = Physics2D.OverlapPoint(dummyPos[1]);
+                    Debug.Log(dummyPos[1]);
 
-                hit0[2] = Physics2D.OverlapPoint(dummyPos[1]);
-                explodeFunc(hit0[0], hit0[1], hit0[2]);
+                    string keepName1 = hit0[0].name;
+                    Debug.Log(hit0[0].name);
+                    string keepName2 = hit0[1].name;
+                    Debug.Log(hit0[1].name);
+                    string keepName3 = hit0[2].name;
+                    Debug.Log(hit0[2].name);
 
-            }
+                    explodeFunc(hit0[0], hit0[1], hit0[2]);
+                    //Burada önce aşşağıya shift fonksiyonu koymalıyım.
 
-            /*if (behaviour3.interactType == incInteractType)
-            {
-                explodeFunc(hit0[0], hit0[1], hit0[3]);
+                    shiftController.findToShift(worldPosClicked);
+                    dictCreator.manageDirectory(worldPosClicked);
+                    shiftController.findToShift(dummyPos[0]);
+                    shiftController.findToShift(dummyPos[1]);
 
-            }
+                    /*objectCreator.continueGame(worldPosClicked, keepName1);
+                    objectCreator.continueGame(dummyPos[0], keepName2);
+                    objectCreator.continueGame(dummyPos[1], keepName3);*/
+                    
+                }
+                else
+                {
+                    Debug.Log("Hata!, null object var");
+                }
+                
 
-
-        
-            Debug.Log("Solda Patlamaya uygun");
-            //Destroy(hit.gameObject);
-        }else if (behaviour3.interactType == incInteractType)
-        {
-            
-            explodeFunc(hit0[0], hit0[3], hit0[4]);
-
-        }
-        else
-            Debug.Log("Solda uygun değil");
-        
-
-        
-
-        //Debug.Log("hittedobject: " + hit.name);
-        
-    */
-        }
+            }else
+                Debug.Log("2 ve 0 eşit değil");            
+    
+        }else
+            Debug.Log("1 ve 0 eşit değil");
     }
 
     public void explodeFunc(Collider2D hitO0,Collider2D hitO1,Collider2D hitO2)
     {           
-                Destroy(hitO0.gameObject);
-                Destroy(hitO1.gameObject);
-                Destroy(hitO2.gameObject);
+        Destroy(hitO0.gameObject);
+        Destroy(hitO1.gameObject);
+        Destroy(hitO2.gameObject);
+        Debug.Log("Patlatma işlemi Başarılı");        
         
     }
-
-    public void areTheySameV(Vector2 worldPos, int incObjectType)
-    {
-        Vector2 dummyPos;
-        //rastgele atandı değişecek
-        dummyPos.x = worldPos.x - 0.5f;
-        dummyPos.y = worldPos.y + 0.5f;
-
-        //sağ-sol kontrol
-
-
-
-        Collider2D hit = Physics2D.OverlapPoint(worldPos);
-        ObjectScript behaviour = hit.GetComponent<ObjectScript>();
-        if (behaviour.objectType == incObjectType)
-        {
-            //Debug.Log("Patlamaya uygun");
-            //Destroy(hit.gameObject);
-        }
-        
-
-    }
-
-
-    public void createName(string incName)//, float xPos, float yPos
-    {
-        //Debug.Log("hitname7" + incName[7]);
-        //Debug.Log("hitname9" + incName[9]);
-        //char to string yapmayı öğren
-        createdName = incName;
-        int dummyKeeper1 = incName[7] - '0';
-        dummyKeeper1 = dummyKeeper1 + 5;
-
-        //string dummyKeeper = (char)dummyKeeper1;
-
-        createdName.Replace(createdName[7], (char)dummyKeeper1);
-        //Debug.Log("createdName = " + createdName);
-
-
-
-    }
-
-    /*public void assignObjectBehaviours()
-    {
-
-        
-        hit0[2] = Physics2D.OverlapPoint(dummyPos);
-        if (!hit0[2])
-        {
-            behaviour2 = hit0[2].GetComponent<ObjectScript>();
-            dummyPos.x = dummyPos.x + 1.5f;
-
-        }
-        else
-            Debug.Log("Hit 2 NUll");
-        hit0[3] = Physics2D.OverlapPoint(dummyPos);
-
-        if (!hit0[3])
-        {
-            behaviour3 = hit0[3].GetComponent<ObjectScript>();
-            dummyPos.x = dummyPos.x + 2f;
-
-        }
-        else
-            Debug.Log("Hit 3 NUll");
-        
-        hit0[4] = Physics2D.OverlapPoint(dummyPos);
-
-        if (!hit0[4])
-        {
-            behaviour4 = hit0[4].GetComponent<ObjectScript>();
-            dummyPos.x = dummyPos.x + 2f;
-
-        }   
-        else
-            Debug.Log("Hit 4 NUll");
-
-    }
-    
-    public void dontKnowWhatToDo()
-    {
-        
-
-
-
-    }
-    
-    public void floatCounter()
-    {*/
         
 
     

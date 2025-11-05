@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class ExpController
 {
-    public SurrController surrController = new SurrController();
 
-    [System.Obsolete]
-    public bool isBoomAble(GameObject clickedObject, GameObject otherObject, int whichWayDidISwipe)
+   
+
+    
+    public bool isBoomAble(SurrController surrController, GameObject clickedObject, GameObject otherObject, int whichWayDidISwipe)
     {
         /*Kendime Düşünceler*/
         /* Bu class swipeDetection içerisinde çağırılıyor.eğer bir obje hareket ettirilirse çağırılıyor.

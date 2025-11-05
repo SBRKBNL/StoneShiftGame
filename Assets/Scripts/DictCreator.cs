@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,17 +18,17 @@ public class DictCreator : MonoBehaviour
             {
                 //if(pK.lvl1[i, j].Item1 != null && mK.lvl1[i, j] != null)
                 if (dK.Lvl1I0.ContainsKey(pK.lvl1[i, j]))
-{
-    // Anahtar mevcutsa, değeri değiştir.
+                {
+                    // Anahtar mevcutsa, değeri değiştir.
                     dK.Lvl1I0[pK.lvl1[i, j]] = mK.lvl1[i, j];
-                    
+
                 }
                 else
                 {
                     // Anahtar mevcut değilse, hiçbir şey yapma (veya farklı bir işlem yap).
                     dK.Lvl1I0.Add(pK.lvl1[i, j], mK.lvl1[i, j]);
                 }
-                
+
                 //Debug.Log("Deger Atanmis");
 
             }
@@ -55,6 +56,26 @@ public class DictCreator : MonoBehaviour
         return value;
         //}
         //return "zortt";
+    }
+
+    public void manageDirectory(Vector2 incValue)
+    {
+
+        (float, float) indexVal;
+        indexVal.Item1 = incValue.x;
+        indexVal.Item2 = incValue.y; 
+
+        if (dK.Lvl1I0.ContainsKey(indexVal))
+        {
+            // Anahtar mevcutsa, değeri değiştir.
+            dK.Lvl1I0[pK.lvl1[i, j]] = mK.lvl1[i, j];
+        }
+        else
+        {
+            // Anahtar mevcut değilse, hiçbir şey yapma (veya farklı bir işlem yap).
+            dK.Lvl1I0.Add(pK.lvl1[i, j], mK.lvl1[i, j]);
+        }
+
     }
 
 }

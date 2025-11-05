@@ -15,6 +15,7 @@ public class SwipeDetection : MonoBehaviour
     Transform objectTransform;
     public int whichWayDidISwipe;
     Collider2D hit;
+    public SurrController surrController;
     //public List<ObjectEntity> objectList;
     
 
@@ -174,7 +175,7 @@ public class SwipeDetection : MonoBehaviour
 
         objectTransform.position = myTarget;
         other.position = otherTarget;
-        Debug.Log(expController.isBoomAble(objectTransform.gameObject, other.gameObject, whichWayDidISwipe)); 
+        Debug.Log(expController.isBoomAble(surrController, objectTransform.gameObject, other.gameObject, whichWayDidISwipe));
     }
 
 }
