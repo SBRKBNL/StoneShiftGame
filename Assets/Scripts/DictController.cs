@@ -72,17 +72,42 @@ public class DictController : MonoBehaviour
         //}
         //return "zortt";
     }
-/*BUrası yanlış oldu düzelt*/
+    /*BUrası yanlış oldu düzelt*/
     public void manageDictionary(Vector2 incValue)//directorydeki bütün elemanları gezerek eşleşme arayacak
+    {
+        
+
+    }
+    
+    public (bool, GameObject[]) searchInObjectDictionary()
     {
         for (float i = minVal.x; i < maxVal.x; i = i + 0.5f)
         {
             for (float j = minVal.y; j < maxVal.y; j = j + 0.5f)
             {
+                if (dK.Lvl1FFO[(i, j)]!=null && dK.Lvl1FFO[(i + 0.5f, j)]!=null)
+                {
+                    if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i + 0.5f, j)])
+                    {
+                        if (dK.Lvl1FFO[(i + 0.5f, j)] == dK.Lvl1FFO[(i + 1f, j)])
+                        {
 
-                
+                            //Patlat
+                            return (true, dK.Lvl1FFO[(i, j)]);
+                        }
+
+                    } else if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
+                    {
+                        if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i + 0.5f, j - 0.5f)])
+                        {
+                            
+
+                        }
+                    }
+                }
             }
         }
+
 
     }
 
