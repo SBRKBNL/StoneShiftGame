@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 467590188}
   - component: {fileID: 467590189}
   m_Layer: 0
-  m_Name: DictCreator
+  m_Name: DictController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -286,6 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5916aa77f8eaa504c8465de3cd5414de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxVal: {x: 0, y: 0}
+  minVal: {x: 0, y: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +723,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   ObjectPrefab: {fileID: 1454439143}
+  dC: {fileID: 467590189}
 --- !u!4 &1425230785
 Transform:
   m_ObjectHideFlags: 0

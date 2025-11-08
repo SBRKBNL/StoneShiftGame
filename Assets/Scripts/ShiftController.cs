@@ -9,7 +9,7 @@ public class ShiftController
     float t = 0f;
     public float returnSpeed = 100f;
 
-    public void findToShift(Vector2 incComingPos)
+    public Vector2 findToShift(Vector2 incComingPos)
     {
         Vector2 changedIncPos;
 
@@ -39,7 +39,7 @@ public class ShiftController
 
 
         }
-
+        return incComingPos;
 
 
 

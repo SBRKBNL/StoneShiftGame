@@ -16,9 +16,12 @@ public class ObjectCreator : MonoBehaviour
     public WhichIsWhich whichIsWhich = new WhichIsWhich();
     public (int, float, float) wIWS; //WhichIsWhichStorage
     RNG rng = new RNG();
+    private Vector2 _maxVal;
+    private Vector2 _minVal;
+    public DictController dC;
 
 
-    public void CreateObjFunc(int verticalHMT, int horizontalHMT, float horizontStart, float verticalStart)
+    public (bool, Vector2, Vector2) CreateObjFunc(int verticalHMT, int horizontalHMT, float horizontStart, float verticalStart)
     {
 
 
@@ -33,10 +36,19 @@ public class ObjectCreator : MonoBehaviour
 
                 GameObject obj = Instantiate(ObjectPrefab);
                 obj.SetActive(true);
-                obj.name = "Object_" + i + "_" + j;
                 wIWS = whichIsWhich.wIWF(i, j);
-                // Objeye bağlı script'e eriş
-                ObjectScript behaviour = obj.GetComponent<ObjectScript>();
+                //wIWS' dene gelen en büyük ve en küçük değeri bulamlıyım. Bunun için de bir fonksiyon tanımlayacağım. Bunu bulmak için de rastgele sırala değil de sıralı hazırlanmış mapler kullanılmasını beklerim mi?
+                /*if(i == verticalHMT -1 && j == horizontalHMT - 1)    
+                    FindMinAndMaxPoints(wIWS.Item2, wIWS.Item3);
+                else*/
+                FindMinAndMaxPoints(wIWS.Item2, wIWS.Item3);
+
+
+
+
+
+                    // Objeye bağlı script'e eriş
+                    ObjectScript behaviour = obj.GetComponent<ObjectScript>();
                 //3 kere çağırılmasına sebep olan yer
                 behaviour.objectType = objectList[wIWS.Item1].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
                 behaviour.interactType = objectList[wIWS.Item1].interactType;
@@ -52,21 +64,28 @@ public class ObjectCreator : MonoBehaviour
 
                 //obj.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
                 obj.transform.position = new Vector3(wIWS.Item2, wIWS.Item3, 0);
+                string wIWSItem2String = wIWS.Item2.ToString("R");
+                string wIWSItem3String = wIWS.Item3.ToString("R");
+
+                obj.name = wIWSItem2String + "_" + wIWSItem3String;
+
+                dC.createObjectDictionaryFunc(wIWS.Item2, wIWS.Item3, obj);
 
             }
 
         }
         whichIsWhich.PrintCounterValues();
-
+        
+        return (true, _maxVal, _minVal);
     }
-    
-    public void continueGame(Vector2 incCreatePos, string obectName)//inc create pos olarak en üstü verip oradan düşürebilirim
+
+    public void continueGame(Vector2 incCreatePos)//inc create pos olarak en üstü verip oradan düşürebilirim
     {
         int randomIndex = rng.RandomNumberGenerator(3);
         GameObject obj = Instantiate(ObjectPrefab);
         obj.SetActive(true);
-        obj.name = obectName;//direk yerine geleceği objenin adı gelir ve eşlenir
-        
+        //direk yerine geleceği objenin adı gelir ve eşlenir
+
         // Objeye bağlı script'e eriş
         ObjectScript behaviour = obj.GetComponent<ObjectScript>();
         //3 kere çağırılmasına sebep olan yer
@@ -74,5 +93,31 @@ public class ObjectCreator : MonoBehaviour
         behaviour.interactType = objectList[randomIndex].interactType;
         obj.GetComponent<SpriteRenderer>().sprite = objectList[randomIndex].objectSprite;
         obj.transform.position = new Vector3(incCreatePos.x, incCreatePos.y, 0);
+        string incCreatePosXString = incCreatePos.x.ToString("R");
+        string incCreatePosYString = incCreatePos.y.ToString("R");
+        obj.name = incCreatePosXString + "_" + incCreatePosYString;
+    }
+
+    
+    
+    public void FindMinAndMaxPoints(float incValX, float incValY)
+    {
+
+
+        if (incValX < _minVal.x && incValY < _minVal.y)
+        {
+            _minVal.x = incValX;
+            _minVal.y = incValY;
+
+        }else if(incValX > _maxVal.x && incValY > _maxVal.y)
+        {
+            
+            _maxVal.x = incValX;
+            _maxVal.y = incValY;
+
+        }
+
+        
+
     }
 }

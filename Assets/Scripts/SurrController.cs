@@ -19,7 +19,7 @@ public class SurrController : MonoBehaviour
 
     public ObjectCreator objectCreator;
     
-    private DictCreator dictCreator;
+    private DictController dictController;
     public Collider2D[] hit0 = new Collider2D[5];
 
     public ShiftController shiftController = new ShiftController();
@@ -30,7 +30,7 @@ public class SurrController : MonoBehaviour
     [Obsolete]
     public void isSurExp(int incInteractTypeCLicked, int incInteractTypeOther, Vector2 incPosKeepClicked, Vector2 incPosKeepShifted)
     {
-        dictCreator = FindObjectOfType<DictCreator>();
+        dictController = FindObjectOfType<DictController>();
         /*Burada sadece objenin çevresinde bulunan diğer elemanlar patlamaya uygun mu onu kontrol edecez onun için bir yerde mapKeeperı lokal bir yere kopyalamalıyız.
         daha sonra kopyalanan bu mapKeeperZart'ı burada çağırarak kenar köşede bulunan elemanlar patlamaya uygun mu ona bakacaz*/
         mKC = mk.lvl1;
@@ -53,14 +53,14 @@ public class SurrController : MonoBehaviour
 
         //sağ-sol kontrol
 
-        _incInterractType[0] = dictCreator.searchInDictionary(worldPosSwifted);
+        _incInterractType[0] = dictController.searchInDictionary(worldPosSwifted);
         Debug.Log("VAlue : " + _incInterractType[0]);
         //Burada tüm çevresel elemanlar kontrol edilecek gene ilk önce kaydırmanın yönüne karar verilmeli daha sonra ilk tıklanan elemanın çevresinden önce yatay kontrol daha sonra dikey ve aralar şeklinde kontrol sağlanır.
-        _incInterractType[1] = dictCreator.searchInDictionary(dummyPos[0]);
+        _incInterractType[1] = dictController.searchInDictionary(dummyPos[0]);
         Debug.Log("VAlue : " + _incInterractType[1]);
         dummyPos[1].x = dummyPos[0].x - 0.5f;
         dummyPos[1].y = dummyPos[0].y;
-        _incInterractType[2] = dictCreator.searchInDictionary(dummyPos[1]);
+        _incInterractType[2] = dictController.searchInDictionary(dummyPos[1]);
         Debug.Log("VAlue : " + _incInterractType[1]);
         
 
@@ -89,10 +89,15 @@ public class SurrController : MonoBehaviour
                     explodeFunc(hit0[0], hit0[1], hit0[2]);
                     //Burada önce aşşağıya shift fonksiyonu koymalıyım.
 
-                    shiftController.findToShift(worldPosClicked);
-                    dictCreator.manageDirectory(worldPosClicked);
-                    shiftController.findToShift(dummyPos[0]);
-                    shiftController.findToShift(dummyPos[1]);
+                    
+                    
+                    objectCreator.continueGame(shiftController.findToShift(worldPosClicked));//Burada find to shiftten gelen değerleri doğrudan continue game içine vererek orada oluşturulacak olan yeni taşların pozisyonuna karar verdik.
+                    dictController.manageDictionary(worldPosClicked);
+                    
+                    objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[0])));
+
+                    
+                    objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[1])));
 
                     /*objectCreator.continueGame(worldPosClicked, keepName1);
                     objectCreator.continueGame(dummyPos[0], keepName2);
