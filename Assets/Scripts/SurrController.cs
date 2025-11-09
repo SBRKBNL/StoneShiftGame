@@ -92,7 +92,7 @@ public class SurrController : MonoBehaviour
                     
                     
                     objectCreator.continueGame(shiftController.findToShift(worldPosClicked));//Burada find to shiftten gelen değerleri doğrudan continue game içine vererek orada oluşturulacak olan yeni taşların pozisyonuna karar verdik.
-                    dictController.manageDictionary(worldPosClicked);
+                    dictController.manageDictionaries(worldPosClicked);
                     
                     objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[0])));
 
