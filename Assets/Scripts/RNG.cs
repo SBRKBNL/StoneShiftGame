@@ -6,7 +6,7 @@ public class RNG
     {
         int randomIndex = Random.Range(0, divNum);
         randomIndex = randomIndex % divNum; // Ensure the index is within bounds
-        Debug.Log(randomIndex);
+        //Debug.Log(randomIndex);
 
         return randomIndex;
 

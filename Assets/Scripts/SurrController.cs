@@ -19,7 +19,7 @@ public class SurrController : MonoBehaviour
 
     public ObjectCreator objectCreator;
     
-    private DictController dictController;
+    private DictController _dictController;
     public Collider2D[] hit0 = new Collider2D[5];
 
     public ShiftController shiftController = new ShiftController();
@@ -27,10 +27,17 @@ public class SurrController : MonoBehaviour
     
     //Dictionary<float, string> sub = new Dictionary<float, string>();
 
+    void Start()
+    {   
+        _dictController = FindObjectOfType<DictController>();
+        shiftController.HizmetSinifiAtama(_dictController);//Burada gönderdikten sonra da newle uyandırıyor muhtemelen bura ile alakalı bir sorun var çöz!!
+                                                            //Çözüldü
+    }
+
     [Obsolete]
     public void isSurExp(int incInteractTypeCLicked, int incInteractTypeOther, Vector2 incPosKeepClicked, Vector2 incPosKeepShifted)
     {
-        dictController = FindObjectOfType<DictController>();
+        
         /*Burada sadece objenin çevresinde bulunan diğer elemanlar patlamaya uygun mu onu kontrol edecez onun için bir yerde mapKeeperı lokal bir yere kopyalamalıyız.
         daha sonra kopyalanan bu mapKeeperZart'ı burada çağırarak kenar köşede bulunan elemanlar patlamaya uygun mu ona bakacaz*/
         mKC = mk.lvl1;
@@ -53,15 +60,15 @@ public class SurrController : MonoBehaviour
 
         //sağ-sol kontrol
 
-        _incInterractType[0] = dictController.searchInDictionary(worldPosSwifted);
-        Debug.Log("VAlue : " + _incInterractType[0]);
+        _incInterractType[0] = _dictController.searchInDictionary(worldPosSwifted);
+        //Debug.Log("VAlue : " + _incInterractType[0]);
         //Burada tüm çevresel elemanlar kontrol edilecek gene ilk önce kaydırmanın yönüne karar verilmeli daha sonra ilk tıklanan elemanın çevresinden önce yatay kontrol daha sonra dikey ve aralar şeklinde kontrol sağlanır.
-        _incInterractType[1] = dictController.searchInDictionary(dummyPos[0]);
-        Debug.Log("VAlue : " + _incInterractType[1]);
+        _incInterractType[1] = _dictController.searchInDictionary(dummyPos[0]);
+        //Debug.Log("VAlue : " + _incInterractType[1]);
         dummyPos[1].x = dummyPos[0].x - 0.5f;
         dummyPos[1].y = dummyPos[0].y;
-        _incInterractType[2] = dictController.searchInDictionary(dummyPos[1]);
-        Debug.Log("VAlue : " + _incInterractType[1]);
+        _incInterractType[2] = _dictController.searchInDictionary(dummyPos[1]);
+        //Debug.Log("VAlue : " + _incInterractType[1]);
         
 
         if (_incInterractType[1] == _incInterractType[0])
@@ -73,18 +80,18 @@ public class SurrController : MonoBehaviour
                 if (Physics2D.OverlapPoint(worldPosClicked) != null && Physics2D.OverlapPoint(dummyPos[0]) != null && Physics2D.OverlapPoint(dummyPos[1]) != null)
                 {
                     hit0[0] = Physics2D.OverlapPoint(worldPosClicked);//Cliked object itself
-                    Debug.Log(worldPosClicked);
+                    //Debug.Log(worldPosClicked);
                     hit0[1] = Physics2D.OverlapPoint(dummyPos[0]);
-                    Debug.Log(dummyPos[0]);
+                    //Debug.Log(dummyPos[0]);
                     hit0[2] = Physics2D.OverlapPoint(dummyPos[1]);
-                    Debug.Log(dummyPos[1]);
+                    //Debug.Log(dummyPos[1]);
 
                     string keepName1 = hit0[0].name;
-                    Debug.Log(hit0[0].name);
+                    //Debug.Log(hit0[0].name);
                     string keepName2 = hit0[1].name;
-                    Debug.Log(hit0[1].name);
+                    //Debug.Log(hit0[1].name);
                     string keepName3 = hit0[2].name;
-                    Debug.Log(hit0[2].name);
+                    //Debug.Log(hit0[2].name);
 
                     explodeFunc(hit0[0], hit0[1], hit0[2]);
                     //Burada önce aşşağıya shift fonksiyonu koymalıyım.
@@ -92,7 +99,7 @@ public class SurrController : MonoBehaviour
                     
                     
                     objectCreator.continueGame(shiftController.findToShift(worldPosClicked));//Burada find to shiftten gelen değerleri doğrudan continue game içine vererek orada oluşturulacak olan yeni taşların pozisyonuna karar verdik.
-                    dictController.manageDictionaries(worldPosClicked);
+                    //_dictController.manageDictionaries(worldPosClicked);
                     
                     objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[0])));
 

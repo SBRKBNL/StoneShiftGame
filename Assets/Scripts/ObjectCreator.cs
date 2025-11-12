@@ -6,7 +6,7 @@ using Unity.Collections;
 
 public class ObjectCreator : MonoBehaviour
 {
-    
+
     public List<ObjectEntity> objectList;
     public GameObject ObjectPrefab; // Prefab for the object to be created
     //private int verticalHMT; // Vertical index for objectData
@@ -47,8 +47,8 @@ public class ObjectCreator : MonoBehaviour
 
 
 
-                    // Objeye bağlı script'e eriş
-                    ObjectScript behaviour = obj.GetComponent<ObjectScript>();
+                // Objeye bağlı script'e eriş
+                ObjectScript behaviour = obj.GetComponent<ObjectScript>();
                 //3 kere çağırılmasına sebep olan yer
                 behaviour.objectType = objectList[wIWS.Item1].objectType; // i yi ve j yi buradan yollamadığım sürece hep baştan başlatacak ve yalnızca ilk değeri alacak.
                 behaviour.interactType = objectList[wIWS.Item1].interactType;
@@ -75,7 +75,7 @@ public class ObjectCreator : MonoBehaviour
 
         }
         whichIsWhich.PrintCounterValues();
-        
+
         return (true, _maxVal, _minVal);
     }
 
@@ -98,26 +98,27 @@ public class ObjectCreator : MonoBehaviour
         obj.name = incCreatePosXString + "_" + incCreatePosYString;
     }
 
-    
-    
+
+
     public void FindMinAndMaxPoints(float incValX, float incValY)
     {
 
 
-        if (incValX < _minVal.x && incValY < _minVal.y)
+        if (incValX <=_minVal.x && incValY <= _minVal.y)
         {
             _minVal.x = incValX;
             _minVal.y = incValY;
 
-        }else if(incValX > _maxVal.x && incValY > _maxVal.y)
+        }
+        else if (incValX >= _maxVal.x && incValY >= _maxVal.y)
         {
-            
+
             _maxVal.x = incValX;
             _maxVal.y = incValY;
 
         }
 
-        
+
 
     }
 }

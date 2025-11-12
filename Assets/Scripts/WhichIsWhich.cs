@@ -22,7 +22,8 @@ public class WhichIsWhich
         lvl1Dummy = mK.lvl1;
         //Debug.Log("lvl1Dummy = " + lvl1Dummy[0, 1]); //İlk değer satır sayısı 2. değer sütun sayısı.
         //Debug.Log("lvl1 = " + mK.lvl1[0,1]);
-        retVal.Item1 = mK.lvl1[incX, incY][1] - '0';
+        retVal.Item1 = int.Parse(mK.lvl1[incX, incY][1].ToString());
+        //retVal.Item1 = mK.lvl1[incX, incY][1] - '0';
         retVal.Item2 = pK.lvl1[incX, incY].Item1;
         retVal.Item3 = pK.lvl1[incX, incY].Item2;
 
@@ -44,14 +45,14 @@ public class WhichIsWhich
 
                 return retVal;
             case '2':
-                Debug.Log("Joker Tas");
+                //Debug.Log("Joker Tas");
                 jokerTasCounter++;
                 //Debug.Log("donen" + retVal);
                 retVal.Item1 = retVal.Item1 + 10;
 
                 return retVal;
             default:
-                Debug.Log("İkisi de gerceklesmedi");
+                //Debug.Log("İkisi de gerceklesmedi");
                 break;
         }
 

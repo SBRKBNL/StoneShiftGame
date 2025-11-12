@@ -1,7 +1,9 @@
 using System;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.Composites;
 
 
 public class DictController : MonoBehaviour
@@ -57,6 +59,7 @@ public class DictController : MonoBehaviour
 
         minVal = incMinVal;
         maxVal = incMaxVal;
+        //Debug.Log("MinVal: " + minVal +"MaxVal" + maxVal);
 
 
     }
@@ -75,66 +78,91 @@ public class DictController : MonoBehaviour
         //return "zortt";
     }
     /*BUrası yanlış oldu düzelt*/
-    public void manageDictionaries(Vector2 incValue)//directorydeki bütün elemanları gezerek eşleşme arayacak
+
+
+    public void upgradeDictionaries(Vector2 incPos, Vector2 changedIncPos)//directorydeki bütün elemanları gezerek eşleşme arayacak
     {
-        
+        dK.Lvl1I0[(incPos.x, incPos.y)] = dK.Lvl1I0[(changedIncPos.x, changedIncPos.y)];
+        dK.Lvl1FFO[(incPos.x, incPos.y)] = dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)];
+        //Debug.Log("Hello World");
 
     }
+
+
     
-    public (bool, GameObject[]) searchInObjectDictionary()
+    public (bool, GameObject[]) findExplodables()
     {
 
-        for (float i = minVal.x; i < maxVal.x; i = i + 0.5f)
+        for (float i = minVal.x; i < maxVal.x ; i = i + 0.5f)
         {
-            for (float j = minVal.y; j < maxVal.y; j = j + 0.5f)
+            for (float j = minVal.y; j < maxVal.y ; j = j + 0.5f)
             {
                 
-                if (dK.Lvl1FFO[(i, j)] != null && dK.Lvl1FFO[(i + 0.5f, j)] != null)
+                if (dK.Lvl1FFO.ContainsKey((i, j)) && dK.Lvl1FFO.ContainsKey((i + 0.5f, j)) && dK.Lvl1FFO[(i, j)] != null && dK.Lvl1FFO[(i + 0.5f, j)] != null)
                 {
                     if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i + 0.5f, j)])
                     {
-                        if (dK.Lvl1FFO[(i + 1f, j)]!=null && (dK.Lvl1FFO[(i + 0.5f, j)] == dK.Lvl1FFO[(i + 1f, j)]))
+                        if (dK.Lvl1FFO.ContainsKey((i + 1f, j)) && dK.Lvl1FFO[(i + 1f, j)] != null && (dK.Lvl1FFO[(i + 0.5f, j)] == dK.Lvl1FFO[(i + 1f, j)]))
                         {
                             gOArray[arrayCounter] = dK.Lvl1FFO[(i, j)];
                             arrayCounter++;
+                            Debug.Log("Patladı, " + i + " " + j);
                             //Patlat
 
                         }
 
                     }
-                    else if (dK.Lvl1FFO[(i, j - 0.5f)] != null && dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
+                    else if (dK.Lvl1FFO.ContainsKey((i, j - 0.5f)) && dK.Lvl1FFO[(i, j - 0.5f)] != null && dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
                     {
                         if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i + 0.5f, j - 0.5f)])
                         {
                             gOArray[arrayCounter] = dK.Lvl1FFO[(i, j)];
+                            Debug.Log("Patladı, " + i + " " + j);
                             arrayCounter++;
 
                         }
                     }
-                }else if(dK.Lvl1FFO[(i, j)] != null && dK.Lvl1FFO[(i, j - 0.5f)] != null)
+                    else{
+
+                    Debug.Log("Patlamaya uygun yok iç üst");
+
+                    }
+                }else if(dK.Lvl1FFO.ContainsKey((i, j)) && dK.Lvl1FFO.ContainsKey((i, j - 0.5f)) && dK.Lvl1FFO[(i, j)] != null && dK.Lvl1FFO[(i, j - 0.5f)] != null)
                 {
-                    if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i , j - 0.5f)])
+                    if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
                     {
-                        if (dK.Lvl1FFO[(i , j - 1f)]!=null && (dK.Lvl1FFO[(i , j - 0.5f)] == dK.Lvl1FFO[(i , j - 1f)]))
+                        if (dK.Lvl1FFO.ContainsKey((i, j - 1f)) && dK.Lvl1FFO[(i, j - 1f)] != null && (dK.Lvl1FFO[(i, j - 0.5f)] == dK.Lvl1FFO[(i, j - 1f)]))
                         {
                             gOArray[arrayCounter] = dK.Lvl1FFO[(i, j)];
+                            Debug.Log("Patladı, " + i + " " + j);
                             arrayCounter++;
                             //Patlat
 
                         }
 
                     }
-                    else if (dK.Lvl1FFO[(i, j - 0.5f)] != null && dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
+                    else if (dK.Lvl1FFO.ContainsKey((i, j - 0.5f)) && dK.Lvl1FFO[(i, j - 0.5f)] != null && dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i, j - 0.5f)])
                     {
                         if (dK.Lvl1FFO[(i, j)] == dK.Lvl1FFO[(i + 0.5f, j - 0.5f)])
                         {
                             gOArray[arrayCounter] = dK.Lvl1FFO[(i, j)];
+                            Debug.Log("Patladı, " + i + " " + j);
                             arrayCounter++;
 
                         }
                     }
-                    
+                    else{
 
+                    Debug.Log("Patlamaya uygun yok iç alt");
+
+                }
+
+
+
+                }
+                else{
+
+                    Debug.Log("Patlamaya uygun yok Üst if");
 
                 }
             }
@@ -147,11 +175,22 @@ public class DictController : MonoBehaviour
 
 
     //Bu fonksiyon içerisinde bütün mapi tarayarak patlama durumunda olanları patlamaları için bir değere atayarak (float olmalı(key değeri)) bir yere döndürerek patlatacaz.
-    public bool findExplodables()
+    public  (bool, int) dictObjectAndIntValRet(Vector2 incChangedIncPos)
     {
+        int retIntVal;
+        bool retBoolVal;
+
+        retIntVal = int.Parse(dK.Lvl1I0[(incChangedIncPos.x, incChangedIncPos.y)].ToString());
+
+
+        GameObject comingVal = dK.Lvl1FFO[(incChangedIncPos.x, incChangedIncPos.y)];
+        ObjectScript behaviour = comingVal.GetComponent<ObjectScript>();
+
+        retBoolVal = (retIntVal == behaviour.interactType);
+        //int.Parse(mK.lvl1[incX, incY][1].ToString());
         //Burada tüm mapi gezmek istediğimiz için belli bir aralıkta gezmeye karar vermiştik max ve min değerlerini bulduk şimdi onlara bakacam eğer doğruysa buraya çekip o aralığın içindeyken tüm keyleri gezdirerek sağda patlama ihtimali varmı ve alltta patlama ihtimali var mı ona baacam
 
-        return false;
+        return (retBoolVal, retIntVal);
     }
 
 

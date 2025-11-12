@@ -139,7 +139,7 @@ public class SwipeDetection : MonoBehaviour
         {
             string dummyNameKeeper = objectTransform.name;
             //Dummyname keeperda ilk tıklanan obje var
-            Debug.Log("dummyNameKeeper: " + objectTransform.name);
+            //Debug.Log("dummyNameKeeper: " + objectTransform.name);
 
             Transform other = hit.collider.transform;
             //other positionda 2. obje var
@@ -175,7 +175,7 @@ public class SwipeDetection : MonoBehaviour
 
         objectTransform.position = myTarget;
         other.position = otherTarget;
-        Debug.Log(expController.isBoomAble(surrController, objectTransform.gameObject, other.gameObject, whichWayDidISwipe));
+        Debug.Log("Is boomable : "+expController.isBoomAble(surrController, objectTransform.gameObject, other.gameObject, whichWayDidISwipe));
     }
 
 }
