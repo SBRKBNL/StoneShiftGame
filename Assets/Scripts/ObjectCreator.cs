@@ -79,7 +79,7 @@ public class ObjectCreator : MonoBehaviour
         return (true, _maxVal, _minVal);
     }
 
-    public void continueGame(Vector2 incCreatePos)//inc create pos olarak en üstü verip oradan düşürebilirim
+    public GameObject continueGame(Vector2 incCreatePos)//inc create pos olarak en üstü verip oradan düşürebilirim
     {
         int randomIndex = rng.RandomNumberGenerator(3);
         GameObject obj = Instantiate(ObjectPrefab);
@@ -96,6 +96,8 @@ public class ObjectCreator : MonoBehaviour
         string incCreatePosXString = incCreatePos.x.ToString("R");
         string incCreatePosYString = incCreatePos.y.ToString("R");
         obj.name = incCreatePosXString + "_" + incCreatePosYString;
+        return obj;
+        
     }
 
 

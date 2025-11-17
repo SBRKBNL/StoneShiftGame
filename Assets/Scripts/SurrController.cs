@@ -35,24 +35,24 @@ public class SurrController : MonoBehaviour
     }
 
     [Obsolete]
-    public void isSurExp(int incInteractTypeCLicked, int incInteractTypeOther, Vector2 incPosKeepClicked, Vector2 incPosKeepShifted)
+    public bool isSurExp(int incInteractTypeCLicked, int incInteractTypeOther, Vector2 incPosKeepClicked, Vector2 incPosKeepShifted)
     {
-        
+
         /*Burada sadece objenin çevresinde bulunan diğer elemanlar patlamaya uygun mu onu kontrol edecez onun için bir yerde mapKeeperı lokal bir yere kopyalamalıyız.
         daha sonra kopyalanan bu mapKeeperZart'ı burada çağırarak kenar köşede bulunan elemanlar patlamaya uygun mu ona bakacaz*/
         mKC = mk.lvl1;
-        
-        
-        areTheySameH(incPosKeepClicked, incPosKeepShifted, incInteractTypeCLicked);
+
+
+        return areTheySameH(incPosKeepClicked, incPosKeepShifted, incInteractTypeCLicked);
 
 
     }
 
 
 
-    public void areTheySameH(Vector2 worldPosClicked, Vector2 worldPosSwifted, int incInteractType)
+    public bool areTheySameH(Vector2 worldPosClicked, Vector2 worldPosSwifted, int incInteractType)
     {
-        
+
         //rastgele atandı değişecek
         dummyPos[0].x = worldPosClicked.x - 0.5f;
         dummyPos[0].y = worldPosClicked.y;
@@ -69,7 +69,7 @@ public class SurrController : MonoBehaviour
         dummyPos[1].y = dummyPos[0].y;
         _incInterractType[2] = _dictController.searchInDictionary(dummyPos[1]);
         //Debug.Log("VAlue : " + _incInterractType[1]);
-        
+
 
         if (_incInterractType[1] == _incInterractType[0])
         {
@@ -94,34 +94,37 @@ public class SurrController : MonoBehaviour
                     //Debug.Log(hit0[2].name);
 
                     explodeFunc(hit0[0], hit0[1], hit0[2]);
-                    //Burada önce aşşağıya shift fonksiyonu koymalıyım.
+
+
+                    shiftController.findToShift(worldPosClicked,0, false);
+                    shiftController.findToShift(shiftController.findToShift(dummyPos[0],0 , false),0 , false);
+                    shiftController.findToShift(shiftController.findToShift(dummyPos[1],0 , false),0 , true);
 
                     
-                    
-                    objectCreator.continueGame(shiftController.findToShift(worldPosClicked));//Burada find to shiftten gelen değerleri doğrudan continue game içine vererek orada oluşturulacak olan yeni taşların pozisyonuna karar verdik.
-                    //_dictController.manageDictionaries(worldPosClicked);
-                    
-                    objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[0])));
 
-                    
-                    objectCreator.continueGame(shiftController.findToShift(shiftController.findToShift(dummyPos[1])));
-
+                    Debug.Log("0. interacttype: " + _incInterractType[0] + "1. interacttype: " + _incInterractType[1]+ "2. interacttype: " + _incInterractType[2]);
                     /*objectCreator.continueGame(worldPosClicked, keepName1);
                     objectCreator.continueGame(dummyPos[0], keepName2);
                     objectCreator.continueGame(dummyPos[1], keepName3);*/
-                    
+
+                    return true; // Match found and explosion occurred
                 }
                 else
                 {
                     Debug.Log("Hata!, null object var");
+                    return false;
                 }
-                
 
-            }else
-                Debug.Log("2 ve 0 eşit değil");            
-    
-        }else
-            Debug.Log("1 ve 0 eşit değil");
+
+            }else{
+                Debug.Log("0. interacttype: " + _incInterractType[0] + "1. interacttype: " + _incInterractType[1]+ "2. interacttype: " + _incInterractType[2]);
+                return false; // No match
+            }
+
+        }else{
+            Debug.Log("0. interacttype: " + _incInterractType[0] + "1. interacttype: " + _incInterractType[1]+ "2. interacttype: " + _incInterractType[2]);
+            return false; // No match
+        }
     }
 
     public void explodeFunc(Collider2D hitO0,Collider2D hitO1,Collider2D hitO2)

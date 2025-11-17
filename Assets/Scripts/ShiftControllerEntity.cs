@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class ShiftControllerEntity
+public class ShiftControllerEntity : ShiftController
 {
+
+    
     
 }

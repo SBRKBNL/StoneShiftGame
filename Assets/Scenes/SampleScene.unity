@@ -440,6 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whichWayDidISwipe: 0
+  dC: {fileID: 467590189}
   surrController: {fileID: 285064515}
   dragThreshold: 0.4
   rayDistance: 1
@@ -715,7 +716,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
-  - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
+  - {fileID: 11400000, guid: 147e252a897d1604a99af713696ad8d9, type: 2}
   - {fileID: 11400000, guid: 8ccf82a4d8a4fc04e8961fee15180a3e, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}
   - {fileID: 11400000, guid: 3683418010f93ea46bff8c4d033db0be, type: 2}

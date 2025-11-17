@@ -11,7 +11,7 @@ public class ExpController
     {
         /*Kendime Düşünceler*/
         /* Bu class swipeDetection içerisinde çağırılıyor.eğer bir obje hareket ettirilirse çağırılıyor.
-        Burada ne kontrol edilmeli: 
+        Burada ne kontrol edilmeli:
         - Öncelikle objenin türü öğrenilmeli bunun sonucunda da obje hareket ettirilebilir mi dönmeli
         - Objenin türü patlamaya uygunsa daha sonra objenin yaptığı hareket sonucu patlama olacak mı o sorgulanmalı.
         - Sorgulama sonucu da uygunsa obje patlatılır
@@ -24,7 +24,7 @@ public class ExpController
 
         ObjectScript behaviourLetted = otherObject.GetComponent<ObjectScript>();
         int localObjectTypeLetted = behaviourLetted.interactType;
-        
+
 
         //ilk once uzerine tıklanan gameObject bir ana oyun elemanı mı onu kontrol etmeliyiz, daha sonra patlama olacak mı olmayacak mı on bakacağız.
         if (localObjectType == 0 || localObjectType == 1)
@@ -34,11 +34,10 @@ public class ExpController
             posKeepClicked.y = clickedObject.transform.position.y;
             posKeepSwifted.x = otherObject.transform.position.x;
             posKeepSwifted.y = otherObject.transform.position.y;
-            
-            surrController.isSurExp(localInteractTypeClicked, localInteractTypeOther, posKeepClicked, posKeepSwifted);
 
+            bool foundMatch = surrController.isSurExp(localInteractTypeClicked, localInteractTypeOther, posKeepClicked, posKeepSwifted);
 
-            return true;
+            return foundMatch; // Return true only if a match was found
         }
         else // Buradan false dönmesi durumunda yer değiştirme fonksiyonunu kapatmalıyım.
         {
@@ -47,7 +46,7 @@ public class ExpController
         //Patlamaları burada kontrol edecez, patlama kontrolü nerede başlar? ilk aşamada başlamayacak. ilk hareketten sonra başlamalı
         //Debug.Log(gO.GetComponent<GameObject>().value);
         //gO.GetComponent(objectType);
-        
+
 
         //return true;
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 //using UnityEngine.InputSystem; // bu bulunduğu zaman eski tarzı kullanınca patlıyor.
 
@@ -14,15 +15,18 @@ public class SwipeDetection : MonoBehaviour
     private int activeFingerId = -1;
     Transform objectTransform;
     public int whichWayDidISwipe;
+    private (float, float) isPosExistSend;
+    public DictController dC;
     Collider2D hit;
     public SurrController surrController;
     //public List<ObjectEntity> objectList;
-    
+
+    private bool isSwapping = false; // Lock to prevent multiple simultaneous swaps
 
     private ExpController expController = new ExpController(); //Patlama olacak mı kontrol edecek bir sınıf bu sınıftaki fonksiyon bool bir değer dönecek.
 
     //[Header("Ayarlar")]
-    
+
     public float dragThreshold = 0.4f;  // Sürükleme yönü algılama eşiği
     public float rayDistance = 1f;      // Komşu arama mesafesi 0.5olarak değiştirilmeli mi?
     public float returnSpeed = 10f;     // Geri dönme hızı
@@ -31,6 +35,9 @@ public class SwipeDetection : MonoBehaviour
     {
         // Eğer hiç dokunma yoksa çık
         if (Input.touchCount == 0) return;
+
+        // Don't process new touches while a swap is in progress
+        if (isSwapping) return;
 
         foreach (Touch touch in Input.touches)
         {
@@ -43,18 +50,24 @@ public class SwipeDetection : MonoBehaviour
                     // Dokunma başladığında collider'a temas ediliyor mu kontrol et
                     hit = Physics2D.OverlapPoint(worldPos);
                     //Debug.Log("hit pos: " + hit.transform == transform);
-                    
+
                     if (hit != null)
                     {
                         objectTransform = hit.transform;
                         GameObject gO1 = hit.gameObject;
-                        
+
                         //Debug.Log("Hit transform pos x" + gO1.transform.position.x);
                         //Gonderme islemini burada yapacaz.
-                        
+
                         isDragging = true;
                         activeFingerId = touch.fingerId;
-                        startPos = objectTransform.position;
+                        // Store the EXACT grid position, not the potentially off-grid position
+                        isPosExistSend.Item1 = hit.transform.position.x;
+                        isPosExistSend.Item2 = hit.transform.position.y;
+                        if(dC.IfKeyExist(isPosExistSend))
+                            startPos = objectTransform.position;
+                        // Immediately snap object back to its grid position to ensure consistency
+                        objectTransform.position = startPos;
                         touchStartPos = worldPos;
                     }
                     break;
@@ -65,7 +78,7 @@ public class SwipeDetection : MonoBehaviour
                         // Objeyi dokunma hareketiyle sürükle
                         Vector3 offset = worldPos - touchStartPos;
                         objectTransform.position = startPos + offset;
-                        
+
                     }
                     break;
 
@@ -75,7 +88,7 @@ public class SwipeDetection : MonoBehaviour
                     {
                         isDragging = false;
                         activeFingerId = -1;
-                        
+
                         HandleRelease(worldPos);
                     }
                     break;
@@ -124,35 +137,39 @@ public class SwipeDetection : MonoBehaviour
 
     private IEnumerator SmoothReturn()
     {
-        while (Vector3.Distance(objectTransform.position, startPos) > 0.01f)
+        float t = 0f;
+        float duration = 0.2f;
+        Vector3 currentPos = objectTransform.position;
+
+        while (t < 1f)
         {
-            objectTransform.position = Vector3.Lerp(objectTransform.position, startPos, Time.deltaTime * returnSpeed);
+            t += Time.deltaTime / duration;
+            objectTransform.position = Vector3.Lerp(currentPos, startPos, t);
             yield return null;
         }
+
+        // Force exact position to avoid floating point errors
         objectTransform.position = startPos;
+        Debug.Log("Returned to exact position: " + startPos);
     }
 
     private bool TrySwapWithNeighbor(Vector2 direction)
     {
+        // Don't allow swapping if already swapping
+        if (isSwapping) return false;
+
+        // First, snap the dragged object back to its grid position
+        objectTransform.position = startPos;
+
         RaycastHit2D hit = Physics2D.Raycast(startPos, direction, rayDistance);
         if (hit.collider != null && hit.collider.gameObject != gameObject)
         {
-            string dummyNameKeeper = objectTransform.name;
-            //Dummyname keeperda ilk tıklanan obje var
-            //Debug.Log("dummyNameKeeper: " + objectTransform.name);
-
             Transform other = hit.collider.transform;
-            //other positionda 2. obje var
             Vector3 otherPos = other.position;
-            //hit.transform.name = "deneme123";
 
+            isSwapping = true; // Lock swapping
             StartCoroutine(SwapSmooth(other, startPos, otherPos));
-            
-            objectTransform.name = other.name;
 
-            Debug.Log("other name: " + other.name);
-            other.name = dummyNameKeeper; 
-            
             return true;
         }
         return false;
@@ -160,6 +177,14 @@ public class SwipeDetection : MonoBehaviour
 
     private IEnumerator SwapSmooth(Transform other, Vector3 myStart, Vector3 otherStart)
     {
+        // Store original names BEFORE any swap
+        string originalMyName = objectTransform.name;
+        string originalOtherName = other.name;
+
+        // Ensure both objects are at their exact grid positions before starting
+        objectTransform.position = myStart;
+        other.position = otherStart;
+
         float t = 0f;
         float duration = 0.2f;
         Vector3 myTarget = otherStart;
@@ -173,9 +198,54 @@ public class SwipeDetection : MonoBehaviour
             yield return null;
         }
 
+        // Force exact final positions
         objectTransform.position = myTarget;
         other.position = otherTarget;
-        Debug.Log("Is boomable : "+expController.isBoomAble(surrController, objectTransform.gameObject, other.gameObject, whichWayDidISwipe));
+
+        // Swap names after positions have changed
+        objectTransform.name = originalOtherName;
+        other.name = originalMyName;
+
+        Debug.Log("Swapped: " + originalMyName + " <-> " + originalOtherName);
+        Debug.Log("New positions - " + objectTransform.name + ": " + objectTransform.position + ", " + other.name + ": " + other.position);
+
+        // Check if the swap created a match
+        bool isMatchFound = expController.isBoomAble(surrController, objectTransform.gameObject, other.gameObject, whichWayDidISwipe);
+        Debug.Log("Is boomable : " + isMatchFound);
+
+        // If no match was found, swap back to original positions
+        if (!isMatchFound)
+        {
+            Debug.Log("No match found, swapping back to original positions");
+            yield return StartCoroutine(SwapBackSmooth(other, myTarget, otherTarget, myStart, otherStart, originalMyName, originalOtherName));
+        }
+
+        isSwapping = false; // Unlock swapping after everything is complete
+    }
+
+    private IEnumerator SwapBackSmooth(Transform other, Vector3 myCurrentPos, Vector3 otherCurrentPos, Vector3 myOriginalPos, Vector3 otherOriginalPos, string originalMyName, string originalOtherName)
+    {
+        float t = 0f;
+        float duration = 0.2f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            objectTransform.position = Vector3.Lerp(myCurrentPos, myOriginalPos, t);
+            other.position = Vector3.Lerp(otherCurrentPos, otherOriginalPos, t);
+            yield return null;
+        }
+
+        // FORCE exact original positions - no floating point errors allowed
+        objectTransform.position = myOriginalPos;
+        other.position = otherOriginalPos;
+
+        // Restore original names
+        objectTransform.name = originalMyName;
+        other.name = originalOtherName;
+
+        Debug.Log("Restored to exact positions - " + originalMyName + ": " + myOriginalPos + ", " + originalOtherName + ": " + otherOriginalPos);
+        Debug.Log("Actual positions after restore - " + objectTransform.name + ": " + objectTransform.position + ", " + other.name + ": " + other.position);
     }
 
 }
