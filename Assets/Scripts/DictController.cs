@@ -74,39 +74,34 @@ public class DictController : MonoBehaviour
 
     public string searchInDictionary(Vector2 worldPos)
     {
-        //if (string.IsNullOrEmpty(dK.Lvl1I0[(worldPos.x, worldPos.y)]))
-        //{
+        // Check if the key exists in the dictionary
+        if (!dK.Lvl1I0.ContainsKey((worldPos.x, worldPos.y)))
+        {
+            return null;
+        }
 
         string value = dK.Lvl1I0[(worldPos.x, worldPos.y)];
 
+        // Return null if the value is null (position has been cleared)
+        if (string.IsNullOrEmpty(value))
+        {
+            return null;
+        }
+
         return value;
-        //}
-        //return "zortt";
     }
     /*BUrası yanlış oldu düzelt*/
 
 
     public void upgradeDictionaries(Vector2 incPos, Vector2 changedIncPos)//dictionarydeki eleman değerlerini güncelleyecek
     {
-        Debug.Log("=== UPGRADING DICTIONARIES ===");
-        Debug.Log("Moving from (" + changedIncPos.x + ", " + changedIncPos.y + ") to (" + incPos.x + ", " + incPos.y + ")");
-
-        // Store what was at the old position
-        string oldType = dK.Lvl1I0[(changedIncPos.x, changedIncPos.y)];
-        GameObject oldObj = dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)];
-        Debug.Log("Object being moved: Type=" + oldType + ", GameObject=" + (oldObj != null ? oldObj.name : "null"));
-
         // Move the object from changedIncPos to incPos
         dK.Lvl1I0[(incPos.x, incPos.y)] = dK.Lvl1I0[(changedIncPos.x, changedIncPos.y)];
         dK.Lvl1FFO[(incPos.x, incPos.y)] = dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)];
 
-        // CRITICAL FIX: Clear the old position by setting it to null
+        // Clear the old position by setting it to null
         dK.Lvl1I0[(changedIncPos.x, changedIncPos.y)] = null;
         dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)] = null;
-
-        Debug.Log("New position (" + incPos.x + ", " + incPos.y + "): Type=" + dK.Lvl1I0[(incPos.x, incPos.y)] + ", GameObject=" + (dK.Lvl1FFO[(incPos.x, incPos.y)] != null ? dK.Lvl1FFO[(incPos.x, incPos.y)].name : "null"));
-        Debug.Log("Old position (" + changedIncPos.x + ", " + changedIncPos.y + "): Type=" + dK.Lvl1I0[(changedIncPos.x, changedIncPos.y)] + ", GameObject=" + (dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)] != null ? dK.Lvl1FFO[(changedIncPos.x, changedIncPos.y)].name : "null"));
-        Debug.Log("=== DICTIONARY UPDATE COMPLETE ===\n");
     }
 
     public bool IfKeyExist((float, float) incFloatFloat)
@@ -188,10 +183,6 @@ public class DictController : MonoBehaviour
                         script2.interactType == script3.interactType &&
                         script1.objectType == 0 && script2.objectType == 0 && script3.objectType == 0)
                     {
-                        Debug.Log("*** HORIZONTAL MATCH FOUND at (" + i + ", " + j + ") ***");
-                        Debug.Log("  Objects: " + obj1.name + ", " + obj2.name + ", " + obj3.name);
-                        Debug.Log("  Type: " + script1.interactType);
-
                         // Add all three objects with HashSet for better duplicate detection
                         if (processedObjects.Add(obj1) && arrayCounter < gOArray.Length)
                         {
@@ -206,7 +197,9 @@ public class DictController : MonoBehaviour
                             gOArray[arrayCounter++] = obj3;
                         }
                     }
-                    else
+                    // Removed excessive debug logging for failed matches
+                    // Uncomment below for detailed debugging if needed
+                    /*else
                     {
                         // Debug why match failed
                         if (script1 == null || script2 == null || script3 == null)
@@ -221,7 +214,7 @@ public class DictController : MonoBehaviour
                         {
                             Debug.Log("Skipping (" + i + ", " + j + "): Wrong objectType (" + script1.objectType + ", " + script2.objectType + ", " + script3.objectType + ")");
                         }
-                    }
+                    }*/
                 }
             }
             if (arrayCounter >= gOArray.Length - 3)
@@ -259,10 +252,6 @@ public class DictController : MonoBehaviour
                         script2.interactType == script3.interactType &&
                         script1.objectType == 0 && script2.objectType == 0 && script3.objectType == 0)
                     {
-                        Debug.Log("*** VERTICAL MATCH FOUND at (" + i + ", " + j + ") ***");
-                        Debug.Log("  Objects: " + obj1.name + ", " + obj2.name + ", " + obj3.name);
-                        Debug.Log("  Type: " + script1.interactType);
-
                         // Add all three objects with HashSet for better duplicate detection
                         if (processedObjects.Add(obj1) && arrayCounter < gOArray.Length)
                         {
@@ -286,7 +275,6 @@ public class DictController : MonoBehaviour
         }
 
         bool foundMatches = arrayCounter > 0;
-        Debug.Log(">>> MATCH SEARCH COMPLETE: Found " + arrayCounter + " objects to explode <<<\n");
         return (foundMatches, gOArray);
     }
 
@@ -338,16 +326,28 @@ public class DictController : MonoBehaviour
         float.TryParse(parcalar[0], out floatDeger1);
         float.TryParse(parcalar[1], out floatDeger2);
 
+        // Get the object's interact type
+        ObjectScript objectScript = gO.GetComponent<ObjectScript>();
+        string interactTypeStr = objectScript != null ? objectScript.interactType.ToString() : "unknown";
+
+        // Update or add to Lvl1FFO (GameObject dictionary)
         if (dK.Lvl1FFO.ContainsKey((incX, incY)))
         {
-            // Anahtar mevcutsa, değeri değiştir.
             dK.Lvl1FFO[(incX, incY)] = gO;
-
         }
         else
         {
-            // Anahtar mevcut değilse, hiçbir şey yapma (veya farklı bir işlem yap).
             dK.Lvl1FFO.Add((incX, incY), gO);
+        }
+
+        // CRITICAL FIX: Update or add to Lvl1I0 (type string dictionary)
+        if (dK.Lvl1I0.ContainsKey((incX, incY)))
+        {
+            dK.Lvl1I0[(incX, incY)] = interactTypeStr;
+        }
+        else
+        {
+            dK.Lvl1I0.Add((incX, incY), interactTypeStr);
         }
     }
 
@@ -371,7 +371,6 @@ public class DictController : MonoBehaviour
                     {
                         dK.Lvl1FFO[key] = null;
                         dK.Lvl1I0[key] = null;
-                        Debug.Log("Removed exploded object at position: " + key);
                     }
                 }
 
@@ -385,6 +384,31 @@ public class DictController : MonoBehaviour
         for (int i = 0; i < gOArray.Length; i++)
         {
             gOArray[i] = null;
+        }
+    }
+
+    // Remove objects at specific positions from dictionaries
+    public void removeExplodedPositions(Vector2 pos1, Vector2 pos2, Vector2 pos3)
+    {
+        // Clear position 1
+        if (dK.Lvl1I0.ContainsKey((pos1.x, pos1.y)))
+        {
+            dK.Lvl1I0[(pos1.x, pos1.y)] = null;
+            dK.Lvl1FFO[(pos1.x, pos1.y)] = null;
+        }
+
+        // Clear position 2
+        if (dK.Lvl1I0.ContainsKey((pos2.x, pos2.y)))
+        {
+            dK.Lvl1I0[(pos2.x, pos2.y)] = null;
+            dK.Lvl1FFO[(pos2.x, pos2.y)] = null;
+        }
+
+        // Clear position 3
+        if (dK.Lvl1I0.ContainsKey((pos3.x, pos3.y)))
+        {
+            dK.Lvl1I0[(pos3.x, pos3.y)] = null;
+            dK.Lvl1FFO[(pos3.x, pos3.y)] = null;
         }
     }
 

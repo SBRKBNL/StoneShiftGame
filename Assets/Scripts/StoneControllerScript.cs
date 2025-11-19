@@ -21,7 +21,7 @@ public class StoneControllerScript : MonoBehaviour
         //Debug.Log("verticalHMT= " + verticalHMT);
         gelenDeger = posArrange.DecideLine(horizontalHMT, verticalHMT);
         //Debug.Log("Gelen Deger Item1= " + gelenDeger.Item1 + "Gelen Deger Item2 = " + gelenDeger.Item2);
-        dC = FindObjectOfType<DictController>();
+        dC = FindFirstObjectByType<DictController>();
 
         dC.createStringDictionaryFunc(horizontalHMT, verticalHMT);
 
